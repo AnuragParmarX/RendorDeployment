@@ -11,10 +11,12 @@ app = Flask(__name__)
 CORS(app)
 
 # =========================
-# CONFIG
+# CONFIG (FIXED PATH ISSUE)
 # =========================
 
-MODEL_PATH = "trained_model.keras"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "trained_model.keras")
+
 GDRIVE_FILE_ID = "1GDQ-oZjPkOP3v0V7GIiff75-N28AeZZj"
 TARGET_SIZE = (128, 128)
 
@@ -51,12 +53,12 @@ model = None
 
 
 # =========================
-# DOWNLOAD MODEL
+# DOWNLOAD MODEL (FIXED)
 # =========================
 
 def download_model():
     if os.path.exists(MODEL_PATH):
-        print("✅ Model already exists locally")
+        print("✅ Model already exists at:", MODEL_PATH)
         return True
 
     print("⬇ Downloading model...")
@@ -66,11 +68,19 @@ def download_model():
     try:
         gdown.download(url, MODEL_PATH, quiet=False)
 
-        if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < 1000000:
-            print("❌ Model download failed (file too small or missing)")
+        # validation
+        if not os.path.exists(MODEL_PATH):
+            print("❌ File not created")
             return False
 
-        print("✅ Model downloaded successfully")
+        size = os.path.getsize(MODEL_PATH)
+        print("📦 Model size:", size)
+
+        if size < 10_000_000:
+            print("❌ File corrupted or incomplete")
+            return False
+
+        print("✅ Model download OK")
         return True
 
     except Exception as e:
@@ -79,7 +89,7 @@ def download_model():
 
 
 # =========================
-# LOAD MODEL
+# LOAD MODEL (FIXED)
 # =========================
 
 def load_model_safe():
@@ -89,12 +99,12 @@ def load_model_safe():
         return True
 
     if not os.path.exists(MODEL_PATH):
-        print("❌ Model file not found")
+        print("❌ Model missing at:", MODEL_PATH)
         return False
 
     try:
-        print("📦 Loading model...")
-        time.sleep(2)
+        print("📦 Loading TensorFlow model...")
+        time.sleep(3)
 
         model = tf.keras.models.load_model(MODEL_PATH)
 
@@ -102,19 +112,20 @@ def load_model_safe():
         return True
 
     except Exception as e:
-        print("❌ Model loading failed:", e)
-        model = None
+        print("❌ Model loading error:", e)
         return False
 
 
 # =========================
-# STARTUP (IMPORTANT FIX)
+# STARTUP (RUN ONCE ONLY)
 # =========================
 
 print("🚀 Server starting...")
 
 if download_model():
     load_model_safe()
+else:
+    print("❌ Model download failed at startup")
 
 
 # =========================
@@ -150,11 +161,10 @@ def predict():
     global model
 
     if model is None:
-        # try one last reload
         load_model_safe()
 
     if model is None:
-        return jsonify({"error": "Model not loaded on server"}), 500
+        return jsonify({"error": "Model not loaded"}), 500
 
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
