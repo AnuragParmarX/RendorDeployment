@@ -5,6 +5,7 @@ from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
 import gdown
+import time
 
 app = Flask(__name__)
 CORS(app)
@@ -50,7 +51,7 @@ model = None
 
 
 # =========================
-# MODEL SETUP
+# MODEL DOWNLOAD
 # =========================
 
 def download_model():
@@ -64,29 +65,44 @@ def download_model():
 
     try:
         gdown.download(url, MODEL_PATH, quiet=False)
-        print("Download completed.")
+        print("Model download completed.")
     except Exception as e:
-        print(f"Download failed: {e}")
+        print("Download failed:", e)
 
+
+# =========================
+# MODEL LOAD (SAFE FIX)
+# =========================
 
 def load_model_safe():
     global model
 
-    try:
-        if not os.path.exists(MODEL_PATH):
-            print("Model file not found after download.")
-            return
+    if model is not None:
+        return
 
+    if not os.path.exists(MODEL_PATH):
+        print("Model file missing after download.")
+        return
+
+    try:
         print("Loading model...")
+
+        # IMPORTANT FIX: sometimes TF crashes if file still writing
+        time.sleep(2)
+
         model = tf.keras.models.load_model(MODEL_PATH)
+
         print("Model loaded successfully.")
 
     except Exception as e:
-        print(f"Model loading error: {e}")
+        print("Model loading error:", e)
         model = None
 
 
-# IMPORTANT: controlled startup order
+# =========================
+# STARTUP
+# =========================
+
 download_model()
 load_model_safe()
 
@@ -104,9 +120,7 @@ def preprocess_image(image, target_size):
     img_array = tf.keras.preprocessing.image.img_to_array(image)
     img_array = np.expand_dims(img_array, axis=0)
 
-    img_array = img_array / 255.0
-
-    return img_array
+    return img_array / 255.0
 
 
 # =========================
@@ -115,11 +129,19 @@ def preprocess_image(image, target_size):
 
 @app.route("/")
 def home():
-    return jsonify({"message": "API running"})
+    return jsonify({
+        "status": "API running",
+        "model_loaded": model is not None
+    })
 
 
 @app.route("/predict", methods=["POST"])
 def predict():
+
+    # 🔥 FIX: try auto-load again if Render loaded late
+    global model
+    if model is None:
+        load_model_safe()
 
     if model is None:
         return jsonify({"error": "Model not loaded"}), 500
@@ -155,7 +177,7 @@ def predict():
 
 
 # =========================
-# MAIN (RENDER SAFE)
+# RENDER ENTRY POINT
 # =========================
 
 if __name__ == "__main__":
