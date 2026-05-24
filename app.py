@@ -61,14 +61,14 @@ def download_model():
 
     print("Downloading model from Google Drive...")
 
-    try:
-        url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
+    url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
 
-        # FIX: removed fuzzy=True (this was breaking your code)
-        gdown.download(url, MODEL_PATH, quiet=False)
+    try:
+        # ❌ removed fuzzy=True (this was breaking your deploy)
+        output = gdown.download(url, MODEL_PATH, quiet=False)
 
         if not os.path.exists(MODEL_PATH):
-            print("Download failed - file not found.")
+            print("Download failed: file not created")
             return False
 
         print("Model download completed.")
@@ -95,9 +95,7 @@ def load_model_safe():
 
     try:
         print("Loading model...")
-
-        # FIX: small delay for Render file stability
-        time.sleep(3)
+        time.sleep(2)  # small delay for file stability
 
         model = tf.keras.models.load_model(MODEL_PATH)
 
@@ -111,18 +109,12 @@ def load_model_safe():
 
 
 # =========================
-# STARTUP FIX (IMPORTANT)
+# PRELOAD MODEL (IMPORTANT FIX)
 # =========================
 
-@app.before_request
-def ensure_model_loaded():
-    global model
-
-    if model is None:
-        print("Initializing model on first request...")
-
-        if download_model():
-            load_model_safe()
+# DO NOT use @before_request (it was causing repeated downloads)
+download_model()
+load_model_safe()
 
 
 # =========================
@@ -155,7 +147,6 @@ def home():
 
 @app.route("/predict", methods=["POST"])
 def predict():
-
     global model
 
     if model is None:
@@ -192,7 +183,7 @@ def predict():
 
 
 # =========================
-# MAIN (RENDER SAFE)
+# RUN
 # =========================
 
 if __name__ == "__main__":
