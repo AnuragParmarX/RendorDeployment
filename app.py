@@ -51,60 +51,81 @@ model = None
 
 
 # =========================
-# MODEL DOWNLOAD
+# DOWNLOAD MODEL (SAFE)
 # =========================
 
 def download_model():
     if os.path.exists(MODEL_PATH):
         print("Model already exists locally.")
-        return
+        return True
 
     print("Downloading model from Google Drive...")
 
     url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
 
     try:
-        gdown.download(url, MODEL_PATH, quiet=False)
+        output = gdown.download(url, MODEL_PATH, quiet=False, fuzzy=True)
+
+        if output is None or not os.path.exists(MODEL_PATH):
+            print("Download failed or file missing.")
+            return False
+
         print("Model download completed.")
+        return True
+
     except Exception as e:
         print("Download failed:", e)
+        return False
 
 
 # =========================
-# MODEL LOAD (SAFE FIX)
+# LOAD MODEL (FIXED)
 # =========================
 
 def load_model_safe():
     global model
 
     if model is not None:
-        return
+        return True
 
     if not os.path.exists(MODEL_PATH):
-        print("Model file missing after download.")
-        return
+        print("Model file missing.")
+        return False
 
     try:
         print("Loading model...")
 
-        # IMPORTANT FIX: sometimes TF crashes if file still writing
-        time.sleep(2)
+        # 🔥 IMPORTANT FIX: ensure file is fully written
+        time.sleep(5)
+
+        file_size = os.path.getsize(MODEL_PATH)
+        print("Model size:", file_size)
 
         model = tf.keras.models.load_model(MODEL_PATH)
 
         print("Model loaded successfully.")
+        return True
 
     except Exception as e:
         print("Model loading error:", e)
         model = None
+        return False
 
 
 # =========================
-# STARTUP
+# STARTUP (IMPORTANT FIX)
 # =========================
 
-download_model()
-load_model_safe()
+@app.before_request
+def ensure_model_loaded():
+    global model
+
+    if model is None:
+        print("Initializing model on first request...")
+
+        ok = download_model()
+        if ok:
+            load_model_safe()
 
 
 # =========================
@@ -138,10 +159,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    # 🔥 FIX: try auto-load again if Render loaded late
     global model
-    if model is None:
-        load_model_safe()
 
     if model is None:
         return jsonify({"error": "Model not loaded"}), 500
@@ -177,7 +195,7 @@ def predict():
 
 
 # =========================
-# RENDER ENTRY POINT
+# MAIN
 # =========================
 
 if __name__ == "__main__":
