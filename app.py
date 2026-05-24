@@ -51,36 +51,35 @@ model = None
 
 
 # =========================
-# DOWNLOAD MODEL (FIXED)
+# DOWNLOAD MODEL
 # =========================
 
 def download_model():
     if os.path.exists(MODEL_PATH):
-        print("Model already exists locally.")
+        print("✅ Model already exists locally")
         return True
 
-    print("Downloading model from Google Drive...")
+    print("⬇ Downloading model...")
 
     url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
 
     try:
-        # ❌ removed fuzzy=True (this was breaking your deploy)
-        output = gdown.download(url, MODEL_PATH, quiet=False)
+        gdown.download(url, MODEL_PATH, quiet=False)
 
-        if not os.path.exists(MODEL_PATH):
-            print("Download failed: file not created")
+        if not os.path.exists(MODEL_PATH) or os.path.getsize(MODEL_PATH) < 1000000:
+            print("❌ Model download failed (file too small or missing)")
             return False
 
-        print("Model download completed.")
+        print("✅ Model downloaded successfully")
         return True
 
     except Exception as e:
-        print("Download failed:", e)
+        print("❌ Download error:", e)
         return False
 
 
 # =========================
-# LOAD MODEL (SAFE)
+# LOAD MODEL
 # =========================
 
 def load_model_safe():
@@ -90,47 +89,48 @@ def load_model_safe():
         return True
 
     if not os.path.exists(MODEL_PATH):
-        print("Model file missing.")
+        print("❌ Model file not found")
         return False
 
     try:
-        print("Loading model...")
-        time.sleep(2)  # small delay for file stability
+        print("📦 Loading model...")
+        time.sleep(2)
 
         model = tf.keras.models.load_model(MODEL_PATH)
 
-        print("Model loaded successfully.")
+        print("✅ Model loaded successfully")
         return True
 
     except Exception as e:
-        print("Model loading error:", e)
+        print("❌ Model loading failed:", e)
         model = None
         return False
 
 
 # =========================
-# PRELOAD MODEL (IMPORTANT FIX)
+# STARTUP (IMPORTANT FIX)
 # =========================
 
-# DO NOT use @before_request (it was causing repeated downloads)
-download_model()
-load_model_safe()
+print("🚀 Server starting...")
+
+if download_model():
+    load_model_safe()
 
 
 # =========================
-# PREPROCESS
+# IMAGE PREPROCESS
 # =========================
 
-def preprocess_image(image, target_size):
+def preprocess_image(image):
     if image.mode != "RGB":
         image = image.convert("RGB")
 
-    image = image.resize(target_size)
+    image = image.resize(TARGET_SIZE)
 
-    img_array = tf.keras.preprocessing.image.img_to_array(image)
-    img_array = np.expand_dims(img_array, axis=0)
+    img = tf.keras.preprocessing.image.img_to_array(image)
+    img = np.expand_dims(img, axis=0)
 
-    return img_array / 255.0
+    return img / 255.0
 
 
 # =========================
@@ -150,27 +150,25 @@ def predict():
     global model
 
     if model is None:
-        return jsonify({"error": "Model not loaded"}), 500
+        # try one last reload
+        load_model_safe()
+
+    if model is None:
+        return jsonify({"error": "Model not loaded on server"}), 500
 
     if "image" not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
-    file = request.files["image"]
-
-    if file.filename == "":
-        return jsonify({"error": "Empty file"}), 400
-
     try:
-        image = Image.open(file)
-
-        processed = preprocess_image(image, TARGET_SIZE)
+        image = Image.open(request.files["image"])
+        processed = preprocess_image(image)
 
         preds = model.predict(processed)
 
         idx = int(np.argmax(preds[0]))
         confidence = float(np.max(preds[0])) * 100
 
-        disease = CLASS_NAMES[idx] if idx < len(CLASS_NAMES) else f"Unknown {idx}"
+        disease = CLASS_NAMES[idx] if idx < len(CLASS_NAMES) else "Unknown"
 
         return jsonify({
             "prediction": disease,
@@ -178,7 +176,7 @@ def predict():
         })
 
     except Exception as e:
-        print("Prediction error:", e)
+        print("❌ Prediction error:", e)
         return jsonify({"error": str(e)}), 500
 
 
@@ -188,4 +186,4 @@ def predict():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    app.run(host="0.0.0.0", port=port)
