@@ -18,7 +18,7 @@ CORS(app)
 MODEL_PATH = "trained_model.keras"
 
 # IMPORTANT: change this to your real Google Drive file ID
-GDRIVE_FILE_ID = "YOUR_FILE_ID_HERE"
+GDRIVE_FILE_ID = "1GDQ-oZjPkOP3v0V7GIiff75-N28AeZZj"
 
 # Change this if your model expects 224x224
 TARGET_SIZE = (128, 128)
