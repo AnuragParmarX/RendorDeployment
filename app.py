@@ -51,7 +51,7 @@ model = None
 
 
 # =========================
-# DOWNLOAD MODEL (SAFE)
+# DOWNLOAD MODEL (FIXED)
 # =========================
 
 def download_model():
@@ -61,13 +61,14 @@ def download_model():
 
     print("Downloading model from Google Drive...")
 
-    url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
-
     try:
-        output = gdown.download(url, MODEL_PATH, quiet=False, fuzzy=True)
+        url = f"https://drive.google.com/uc?id={GDRIVE_FILE_ID}"
 
-        if output is None or not os.path.exists(MODEL_PATH):
-            print("Download failed or file missing.")
+        # FIX: removed fuzzy=True (this was breaking your code)
+        gdown.download(url, MODEL_PATH, quiet=False)
+
+        if not os.path.exists(MODEL_PATH):
+            print("Download failed - file not found.")
             return False
 
         print("Model download completed.")
@@ -79,7 +80,7 @@ def download_model():
 
 
 # =========================
-# LOAD MODEL (FIXED)
+# LOAD MODEL (SAFE)
 # =========================
 
 def load_model_safe():
@@ -95,11 +96,8 @@ def load_model_safe():
     try:
         print("Loading model...")
 
-        # 🔥 IMPORTANT FIX: ensure file is fully written
-        time.sleep(5)
-
-        file_size = os.path.getsize(MODEL_PATH)
-        print("Model size:", file_size)
+        # FIX: small delay for Render file stability
+        time.sleep(3)
 
         model = tf.keras.models.load_model(MODEL_PATH)
 
@@ -113,7 +111,7 @@ def load_model_safe():
 
 
 # =========================
-# STARTUP (IMPORTANT FIX)
+# STARTUP FIX (IMPORTANT)
 # =========================
 
 @app.before_request
@@ -123,8 +121,7 @@ def ensure_model_loaded():
     if model is None:
         print("Initializing model on first request...")
 
-        ok = download_model()
-        if ok:
+        if download_model():
             load_model_safe()
 
 
@@ -195,7 +192,7 @@ def predict():
 
 
 # =========================
-# MAIN
+# MAIN (RENDER SAFE)
 # =========================
 
 if __name__ == "__main__":
