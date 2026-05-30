@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Plant Disease Detection</title>
+  <meta
+    name="description"
+    content="Modern AI-powered plant disease detection interface with image upload, instant prediction, and treatment guidance."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar glass reveal">
+      <a href="#hero" class="brand">
+        <span class="brand-mark">AI</span>
+        <span class="brand-text">PlantVision</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#upload">Upload</a>
+        <a href="#features">Features</a>
+        <a href="#about">About</a>
+      </nav>
+      <a href="#upload" class="btn btn-secondary">Try Demo</a>
+    </header>
+
+    <main>
+      <section id="hero" class="hero section">
+        <div class="hero-bg">
+          <span class="orb orb-1"></span>
+          <span class="orb orb-2"></span>
+          <span class="orb orb-3"></span>
+          <div class="grid-overlay"></div>
+          <div class="particles" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="hero-content">
+          <div class="hero-copy reveal">
+            <span class="eyebrow">Smart Agriculture Platform</span>
+            <h1>AI Plant Disease Detection</h1>
+            <p>
+              Upload a leaf image and detect diseases instantly with an elegant,
+              AI-powered diagnosis experience built for modern growers.
+            </p>
+            <div class="hero-actions">
+              <a href="#upload" class="btn btn-primary">Get Started</a>
+              <a href="#about" class="btn btn-ghost">Learn More</a>
+            </div>
+            <div class="hero-stats">
+              <div class="stat-card glass">
+                <strong>Instant</strong>
+                <span>Real-time image analysis</span>
+              </div>
+              <div class="stat-card glass">
+                <strong>Reliable</strong>
+                <span>AI-powered disease analysis</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-panel glass reveal">
+            <div class="panel-top">
+              <span class="panel-dot"></span>
+              <span class="panel-dot"></span>
+              <span class="panel-dot"></span>
+            </div>
+            <div class="panel-body">
+              <div class="scan-card">
+                <div class="scan-badge">Live Preview</div>
+                <div class="scan-image">
+                  <img
+                    src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?auto=format&fit=crop&w=900&q=80"
+                    alt="Healthy leaf close-up"
+                  >
+                </div>
+                <div class="scan-meta">
+                  <div>
+                    <span class="label">Model Status</span>
+                    <strong>Ready to Predict</strong>
+                  </div>
+                  <div>
+                    <span class="label">Supported Input</span>
+                    <strong>Leaf Images</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="upload" class="section">
+        <div class="section-header reveal">
+          <span class="eyebrow">Diagnosis Workflow</span>
+          <h2>Upload a leaf image for analysis</h2>
+          <p>
+            Drag and drop an image or browse from your device, then run a
+            prediction to view disease name, cause, prevention, and treatment tips.
+          </p>
+        </div>
+
+        <div class="upload-layout">
+          <div class="upload-card glass reveal">
+            <label for="imageInput" id="dropZone" class="drop-zone">
+              <input id="imageInput" type="file" accept="image/*" hidden>
+              <div class="drop-icon">
+                <span></span>
+              </div>
+              <h3>Drag &amp; Drop Image</h3>
+              <p>or click to browse your files</p>
+              <small>PNG, JPG, JPEG supported</small>
+            </label>
+
+            <div class="action-row">
+              <button id="predictButton" class="btn btn-primary" type="button">
+                Predict Disease
+              </button>
+              <button id="resetButton" class="btn btn-ghost" type="button">
+                Reset
+              </button>
+            </div>
+
+            <div id="statusMessage" class="status-message" aria-live="polite"></div>
+
+            <div id="loadingState" class="loading-state" hidden>
+              <div class="spinner"></div>
+              <span>Analyzing image with AI model...</span>
+            </div>
+          </div>
+
+          <div class="preview-card glass reveal">
+            <div class="card-heading">
+              <h3>Selected Image</h3>
+              <span class="muted">Preview before prediction</span>
+            </div>
+            <div class="preview-frame">
+              <img id="previewImage" alt="Selected leaf preview">
+              <div id="previewPlaceholder" class="preview-placeholder">
+                <span>Image preview appears here</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="result" class="section">
+        <div class="section-header reveal">
+          <span class="eyebrow">Prediction Output</span>
+          <h2>Clear, actionable disease insights</h2>
+          <p>
+            Results are presented in a clean card layout so the diagnosis is easy
+            to read on mobile and desktop.
+          </p>
+        </div>
+
+        <div id="resultContainer" class="result-grid">
+          <article class="result-card glass reveal">
+            <div class="result-icon">+</div>
+            <h3>Predicted Disease</h3>
+            <p id="diseaseName">Awaiting image upload</p>
+          </article>
+          <article class="result-card glass reveal result-card-wide">
+            <div class="result-icon">i</div>
+            <h3>Disease Insights</h3>
+            <div class="insight-tabs" role="tablist" aria-label="Disease insights tabs">
+              <button
+                class="insight-tab-btn is-active"
+                type="button"
+                role="tab"
+                aria-selected="true"
+                aria-controls="panel-cause"
+                data-tab="cause"
+              >
+                Cause
+              </button>
+              <button
+                class="insight-tab-btn"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-prevention"
+                data-tab="prevention"
+              >
+                Prevention
+              </button>
+              <button
+                class="insight-tab-btn"
+                type="button"
+                role="tab"
+                aria-selected="false"
+                aria-controls="panel-treatment"
+                data-tab="treatment"
+              >
+                Treatment
+              </button>
+            </div>
+            <div class="insight-panels">
+              <div id="panel-cause" class="insight-panel is-active" role="tabpanel">
+                <p id="causeText">
+                  Upload an image and run a prediction to view probable cause.
+                </p>
+              </div>
+              <div id="panel-prevention" class="insight-panel" role="tabpanel" hidden>
+                <p id="preventionText">
+                  Upload an image and run a prediction to view prevention guidance.
+                </p>
+              </div>
+              <div id="panel-treatment" class="insight-panel" role="tabpanel" hidden>
+                <p id="treatmentText">
+                  Upload an image and run a prediction to receive treatment guidance.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="features" class="section">
+        <div class="section-header reveal">
+          <span class="eyebrow">Why Choose It</span>
+          <h2>Designed like a real product experience</h2>
+          <p>
+            Premium visuals meet practical workflow design to make plant health
+            diagnostics effortless.
+          </p>
+        </div>
+
+        <div class="features-grid">
+          <article class="feature-card glass reveal">
+            <div class="feature-icon">01</div>
+            <h3>Fast Detection</h3>
+            <p>Delivers quick responses so users can act without delay.</p>
+          </article>
+          <article class="feature-card glass reveal">
+            <div class="feature-icon">02</div>
+            <h3>Accurate Results</h3>
+            <p>Provides clear disease insights with actionable field guidance.</p>
+          </article>
+          <article class="feature-card glass reveal">
+            <div class="feature-icon">03</div>
+            <h3>Easy to Use</h3>
+            <p>Simple drag-and-drop interactions reduce friction for any user.</p>
+          </article>
+          <article class="feature-card glass reveal">
+            <div class="feature-icon">04</div>
+            <h3>Offline Capability</h3>
+            <p>Frontend structure is lightweight and adaptable for offline-ready flows.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="about" class="section">
+        <div class="about-card glass reveal">
+          <div>
+            <span class="eyebrow">About The Project</span>
+            <h2>Helping growers identify issues earlier</h2>
+          </div>
+          <p>
+            This Plant Disease Detection interface combines a clean startup-style
+            UI with an AI prediction workflow. Users can upload a leaf image,
+            receive a likely disease diagnosis from the backend model, and review
+            practical treatment guidance stored directly in the frontend for a
+            lightweight, database-free experience.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Built for AI-powered agriculture experiences. Crafted with HTML, CSS, and JavaScript.</p>
+    </footer>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
