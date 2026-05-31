@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 from PIL import Image
 import tensorflow as tf
+import gc  # Force background memory release
 
 app = Flask(__name__)
 CORS(app)
@@ -12,10 +13,19 @@ CORS(app)
 # Point directly to the model file you uploaded to GitHub
 MODEL_PATH = "trained_model.keras"
 
-# Load the model ONCE globally at startup
+# Clean up memory completely before loading the model
+gc.collect()
+tf.keras.backend.clear_session()
+
+# Configure TensorFlow to use minimal background threads to prevent RAM spikes
+tf.config.threading.set_inter_op_parallelism_threads(1)
+tf.config.threading.set_intra_op_parallelism_threads(1)
+
+# Load the model ONCE globally at startup within memory constraints
 model = None
 try:
     if os.path.exists(MODEL_PATH):
+        print("Attempting to load model within memory limits...")
         model = tf.keras.models.load_model(MODEL_PATH)
         print("Model loaded successfully from local repository.")
     else:
@@ -23,6 +33,9 @@ try:
 except Exception as e:
     print(f"Error loading model: {e}")
     model = None
+
+# Free memory right after loading phase completes
+gc.collect()
 
 # Update to 224x224 or 256x256 if your model expects a different size
 TARGET_SIZE = (128, 128)
@@ -77,8 +90,9 @@ def predict():
         predicted_class_idx = np.argmax(predictions)
         confidence = float(np.max(predictions)) * 100
         
-        # Clear backend session immediately to free up RAM on Render
+        # Clear backend session and run garbage collector immediately to free up RAM
         tf.keras.backend.clear_session()
+        gc.collect()
         
         if predicted_class_idx < len(CLASS_NAMES):
             disease_name = CLASS_NAMES[predicted_class_idx]
@@ -92,6 +106,9 @@ def predict():
 
     except Exception as e:
         print(f"Prediction error: {e}")
+        # Make sure session clears even if it fails
+        tf.keras.backend.clear_session()
+        gc.collect()
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
