@@ -189,78 +189,52 @@ function parsePredictionLabel(rawLabel) {
     }
 
     const raw = rawLabel.trim();
-
     const hasClassSeparator = raw.includes("___");
+    const [plantRaw, stateRaw] = hasClassSeparator ? raw.split("___") : ["", raw];
 
-    const [plantRaw, stateRaw] = hasClassSeparator
-        ? raw.split("___")
-        : ["", raw];
-
-    const plantDisplay = plantRaw
-        ? normalizeText(plantRaw)
-        : "Plant";
-
+    const plantDisplay = plantRaw ? normalizeText(plantRaw) : "Plant";
     const stateDisplay = normalizeText(stateRaw);
 
     const fullLabelLookup = normalizeLookupKey(raw);
     const stateLookup = normalizeLookupKey(stateRaw);
-
     const isHealthy = stateLookup.includes("healthy");
 
     if (isHealthy) {
         return {
-            displayLabel: hasClassSeparator
-                ? `${plantDisplay} - Healthy`
-                : stateDisplay,
-
+            displayLabel: hasClassSeparator ? `${plantDisplay} - Healthy` : stateDisplay,
             cause: `No active disease detected in ${plantDisplay}.`,
-
-            prevention:
-                "Continue routine crop hygiene, balanced nutrition, and periodic scouting to keep plants healthy.",
-
-            treatment:
-                `${plantDisplay} is healthy. Continue regular irrigation, nutrition, and routine monitoring.`
+            prevention: "Continue routine crop hygiene, balanced nutrition, and periodic scouting to keep plants healthy.",
+            treatment: `${plantDisplay} is healthy. Continue regular irrigation, nutrition, and routine monitoring.`
         };
     }
 
-    const diseaseInfo =
-        diseaseGuidance[fullLabelLookup] ||
-        diseaseGuidance[stateLookup] ||
-        defaultUnhealthyGuidance;
+    const diseaseInfo = diseaseGuidance[fullLabelLookup] || diseaseGuidance[stateLookup] || defaultUnhealthyGuidance;
 
     return {
-        displayLabel: hasClassSeparator
-            ? `${plantDisplay} - ${stateDisplay}`
-            : stateDisplay,
-
+        displayLabel: hasClassSeparator ? `${plantDisplay} - ${stateDisplay}` : stateDisplay,
         cause: diseaseInfo.cause,
         prevention: diseaseInfo.prevention,
         treatment: diseaseInfo.treatment
     };
 }
 
+// FIXED: Flipped the hidden property logic so it shows/hides properly
 function updatePreview(file) {
     if (!file) {
         previewImage.removeAttribute("src");
         previewImage.style.display = "none";
-        previewPlaceholder.hidden = true;
+        previewPlaceholder.hidden = false; // Show the placeholder box when empty
         return;
     }
 
     const imageUrl = URL.createObjectURL(file);
-
     previewImage.src = imageUrl;
     previewImage.style.display = "block";
-    previewPlaceholder.hidden = false;
+    previewPlaceholder.hidden = true; // Hide the placeholder text when image exists
 }
 
 function updateResult(data) {
-    const rawPrediction =
-        data.prediction ||
-        data.disease ||
-        data.class ||
-        "Unknown";
-
+    const rawPrediction = data.prediction || data.disease || data.class || "Unknown";
     const parsedResult = parsePredictionLabel(rawPrediction);
 
     diseaseName.textContent = parsedResult.displayLabel;
@@ -271,38 +245,26 @@ function updateResult(data) {
 
 function resetUI() {
     selectedFile = null;
-
     imageInput.value = "";
-
     updatePreview(null);
-
     setStatus("");
 
     diseaseName.textContent = "Awaiting image upload";
-
-    causeText.textContent =
-        "Upload an image and run a prediction to view probable cause.";
-
-    preventionText.textContent =
-        "Upload an image and run a prediction to view prevention guidance.";
-
-    treatmentText.textContent =
-        "Upload an image and run a prediction to receive treatment guidance.";
-
+    causeText.textContent = "Upload an image and run a prediction to view probable cause.";
+    preventionText.textContent = "Upload an image and run a prediction to view prevention guidance.";
+    treatmentText.textContent = "Upload an image and run a prediction to receive treatment guidance.";
     loadingState.hidden = true;
 }
 
 function setActiveInsightTab(tabName) {
     insightTabButtons.forEach((button) => {
         const isActive = button.dataset.tab === tabName;
-
         button.classList.toggle("is-active", isActive);
         button.setAttribute("aria-selected", String(isActive));
     });
 
     insightPanels.forEach((panel) => {
         const isActive = panel.id === `panel-${tabName}`;
-
         panel.classList.toggle("is-active", isActive);
         panel.hidden = !isActive;
     });
@@ -315,28 +277,21 @@ function handleFileSelection(file) {
     }
 
     selectedFile = file;
-
     updatePreview(file);
-
     setStatus(`Selected: ${file.name}`, "success");
 }
 
 async function predictDisease() {
     if (!selectedFile) {
-        setStatus(
-            "Please upload an image before predicting.",
-            "error"
-        );
+        setStatus("Please upload an image before predicting.", "error");
         return;
     }
 
     const formData = new FormData();
-
     formData.append("image", selectedFile);
 
     loadingState.hidden = false;
     predictButton.disabled = true;
-
     setStatus("Sending image to detection API...");
 
     try {
@@ -346,48 +301,29 @@ async function predictDisease() {
         });
 
         if (!response.ok) {
-            const errData = await response
-                .json()
-                .catch(() => ({}));
-
-            throw new Error(
-                errData.error ||
-                `Server responded with status ${response.status}`
-            );
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || `Server responded with status ${response.status}`);
         }
 
         const result = await response.json();
-
         updateResult(result);
-
-        setStatus(
-            "Prediction completed successfully.",
-            "success"
-        );
-
-        document
-            .getElementById("result")
-            .scrollIntoView({
-                behavior: "smooth"
-            });
-
+        setStatus("Prediction completed successfully.", "success");
+        
+        // Dynamic scroll to results section
+        const resultSection = document.getElementById("result");
+        if (resultSection) {
+            resultSection.scrollIntoView({ behavior: "smooth" });
+        }
     } catch (error) {
-        setStatus(
-            `Prediction failed: ${error.message}`,
-            "error"
-        );
-
-        console.error(
-            "Prediction error:",
-            error
-        );
-
+        setStatus(`Prediction failed: ${error.message}`, "error");
+        console.error("Prediction error:", error);
     } finally {
         loadingState.hidden = true;
         predictButton.disabled = false;
     }
 }
 
+// Drag and drop event wiring
 ["dragenter", "dragover"].forEach((eventName) => {
     dropZone.addEventListener(eventName, (event) => {
         event.preventDefault();
@@ -412,50 +348,33 @@ imageInput.addEventListener("change", (event) => {
     handleFileSelection(file);
 });
 
-predictButton.addEventListener(
-    "click",
-    predictDisease
-);
-
-resetButton.addEventListener(
-    "click",
-    resetUI
-);
+predictButton.addEventListener("click", predictDisease);
+resetButton.addEventListener("click", resetUI);
 
 insightTabButtons.forEach((button) => {
     button.addEventListener("click", () => {
-        setActiveInsightTab(
-            button.dataset.tab
-        );
+        setActiveInsightTab(button.dataset.tab);
     });
 });
 
-const revealElements =
-    document.querySelectorAll(".reveal");
-
-const revealObserver =
-    new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add(
-                        "is-visible"
-                    );
-
-                    revealObserver.unobserve(
-                        entry.target
-                    );
-                }
-            });
-        },
-        {
-            threshold: 0.14
-        }
-    );
+// Scroll animations handler
+const revealElements = document.querySelectorAll(".reveal");
+const revealObserver = new IntersectionObserver(
+    (entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    },
+    { threshold: 0.14 }
+);
 
 revealElements.forEach((element) => {
     revealObserver.observe(element);
 });
 
+// Run layout initialization
 resetUI();
 setActiveInsightTab("cause");
