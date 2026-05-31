@@ -74,12 +74,6 @@ const diseaseGuidance = {
     treatment:
       "Improve canopy airflow, remove infected foliage where practical, and follow a labeled grape fungicide program to protect new growth."
   },
-  "orange haunglongbing citrus greening": {
-    cause: "Huanglongbing is a bacterial disease spread by Asian citrus psyllids and infected propagation material.",
-    prevention: "Use certified clean planting stock, monitor psyllids closely, and keep trees as healthy as possible.",
-    treatment:
-      "There is no cure; control psyllid vectors, remove confirmed severely infected trees where advised, and support tree health with strong irrigation and nutrition management."
-  },
   "orange huanglongbing citrus greening": {
     cause: "Huanglongbing is a bacterial disease spread by Asian citrus psyllids and infected propagation material.",
     prevention: "Use certified clean planting stock, monitor psyllids closely, and keep trees as healthy as possible.",
@@ -142,405 +136,325 @@ const diseaseGuidance = {
   },
   "tomato leaf mold": {
     cause: "Tomato leaf mold develops mainly in high humidity or greenhouse-like conditions with poor airflow.",
-    prevention: "Ventilate growing areas, prune excess growth, and avoid letting humidity stay above disease-friendly levels.",
-    treatment:
-      "Increase ventilation, prune for better air movement, remove infected leaves, and rotate labeled fungicides if leaf mold keeps spreading."
-  },
-  "tomato septoria leaf spot": {
-    cause: "Tomato septoria survives on infected debris and spreads by rain splash and work in wet foliage.",
-    prevention: "Remove lower leaves, mulch soil, rotate crops, and avoid overhead watering.",
-    treatment:
-      "Prune off infected lower foliage, keep leaves dry, and use labeled fungicides such as copper or chlorothalonil early in disease development."
-  },
-  "tomato spider mites two-spotted spider mite": {
-    cause: "Two-spotted spider mites multiply quickly in hot, dry, dusty conditions and on water-stressed plants.",
-    prevention: "Reduce dust, maintain even irrigation, and inspect the undersides of leaves regularly.",
-    treatment:
-      "Spray leaf undersides with water, use insecticidal soap or horticultural oil with full coverage, and shift to a labeled miticide if populations remain high."
-  },
-  "tomato target spot": {
-    cause: "Tomato target spot is a fungal disease that intensifies with warm temperatures, long leaf wetness, and dense canopies.",
-    prevention: "Widen spacing, prune lower growth, avoid over-fertilizing with nitrogen, and reduce overhead irrigation.",
-    treatment:
-      "Remove diseased lower leaves, improve canopy airflow, and use labeled fungicides on a regular schedule when weather favors target spot."
-  },
-  "tomato tomato yellow leaf curl virus": {
-    cause: "TYLCV is a viral disease spread by whiteflies and infected plant material.",
-    prevention: "Manage whiteflies early, use resistant varieties where available, and do not bring suspect transplants into the garden.",
-    treatment:
-      "There is no cure; bag and remove infected plants carefully to trap whiteflies, destroy them away from the garden, and focus on aggressive whitefly control."
-  },
-  "tomato tomato mosaic virus": {
-    cause: "Tomato mosaic virus spreads by contaminated hands, tools, clothing, seed, and infected plant material.",
-    prevention: "Disinfect tools often, avoid tobacco contact around plants, and remove suspect plants quickly.",
-    treatment:
-      "There is no curative treatment; remove infected plants promptly, disinfect hands and tools between plants, and use clean seed or resistant varieties next cycle."
-  },
-  "apple scab": {
-    cause: "Fungal infection favored by prolonged moisture and cool, humid weather.",
-    prevention: "Improve air circulation, prune dense canopy, and avoid overhead irrigation.",
-    treatment:
-      "Remove infected leaves, improve airflow, and apply a suitable fungicide program in wet periods."
-  },
-  "black rot": {
-    cause: "Fungal pathogen spread through infected plant debris and wet foliage.",
-    prevention: "Sanitize pruners, remove infected debris, and maintain proper spacing.",
-    treatment:
-      "Prune affected plant parts early, sanitize tools, and apply preventive fungicide where recommended."
-  },
-  "cedar apple rust": {
-    cause: "Fungal disease cycling between apple hosts and nearby cedar or juniper hosts.",
-    prevention: "Reduce alternate hosts nearby and monitor during spring infection periods.",
-    treatment:
-      "Remove alternate hosts where possible and apply preventive sprays during high-risk periods."
-  },
-  "powdery mildew": {
-    cause: "Fungal spores thrive in humid environments with poor airflow.",
-    prevention: "Keep canopy open, avoid overcrowding, and monitor early signs on leaves.",
-    treatment:
-      "Increase airflow, avoid overcrowding, and apply labeled sulfur or neem-based treatment as appropriate."
-  },
-  "cercospora leaf spot gray leaf spot": {
-    cause: "Leaf fungal pathogens spread by rain splash and infected residue.",
-    prevention: "Practice crop rotation, residue management, and use resistant varieties.",
-    treatment:
-      "Reduce leaf wetness, rotate crops, and use resistant varieties plus fungicide support if needed."
-  },
-  "common rust": {
-    cause: "Airborne rust spores infect leaves under humid and moderate temperature conditions.",
-    prevention: "Use tolerant varieties and monitor fields early for pustule development.",
-    treatment:
-      "Monitor spread and apply crop-safe fungicide when infection pressure is high and crop stage justifies it."
-  },
-  "northern leaf blight": {
-    cause: "Fungal infection survives in crop residue and spreads in humid weather.",
-    prevention: "Rotate crops, manage infected residue, and plant resistant hybrids.",
-    treatment:
-      "Use resistant hybrids, rotate crops, and apply fungicide early when lesions first appear."
-  },
-  "esca black measles": {
-    cause: "Complex grapevine trunk disease associated with wood-infecting fungi.",
-    prevention: "Protect pruning cuts, avoid trunk wounds, and maintain vine vigor.",
-    treatment:
-      "Prune infected wood during dry periods, protect pruning wounds, and improve vine stress management."
-  },
-  "leaf blight isariopsis leaf spot": {
-    cause: "Fungal blight develops rapidly under warm, wet, and low-airflow conditions.",
-    prevention: "Reduce canopy humidity and remove infected leaves from the field.",
-    treatment:
-      "Improve canopy airflow and moisture control, remove infected material, and follow local fungicide guidance."
-  },
-  "haunglongbing citrus greening": {
-    cause: "Bacterial disease transmitted by Asian citrus psyllid insects.",
-    prevention: "Control psyllid population and use certified disease-free planting material.",
-    treatment:
-      "Control psyllid vectors, remove severely infected trees, and follow integrated citrus greening management."
-  },
-  "huanglongbing citrus greening": {
-    cause: "Bacterial disease transmitted by Asian citrus psyllid insects.",
-    prevention: "Control psyllid population and use certified disease-free planting material.",
-    treatment:
-      "Control psyllid vectors, remove severely infected trees, and follow integrated citrus greening management."
-  },
-  "bacterial spot": {
-    cause: "Bacterial infection spread by splashing water, tools, and infected seed or seedlings.",
-    prevention: "Avoid overhead irrigation and start with clean seed or healthy transplants.",
-    treatment:
-      "Use disease-free seed or transplants, avoid overhead irrigation, and apply copper-based sprays where advised."
-  },
-  "early blight": {
-    cause: "Fungal infection encouraged by warm temperatures and leaf wetness.",
-    prevention: "Mulch soil, rotate crops, and avoid frequent leaf wetting.",
-    treatment:
-      "Remove lower infected leaves, rotate crops, mulch soil splash zones, and use fungicide preventively."
-  },
-  "late blight": {
-    cause: "Aggressive oomycete disease spreading quickly in cool and moist conditions.",
-    prevention: "Use clean seed stock, avoid water splash, and scout frequently in humid weather.",
-    treatment:
-      "Act quickly by removing infected plants, avoid leaf wetness, and apply approved blight fungicides immediately."
-  },
-  "leaf mold": {
-    cause: "Fungal growth in high humidity and poorly ventilated crop canopy.",
-    prevention: "Improve ventilation, reduce humidity, and prune dense foliage.",
-    treatment:
-      "Ventilate growing areas, reduce humidity, prune dense foliage, and apply targeted fungicide if needed."
-  },
-  "septoria leaf spot": {
-    cause: "Fungal pathogen survives in debris and spreads via water splash.",
-    prevention: "Remove infected lower leaves and avoid wetting foliage during irrigation.",
-    treatment:
-      "Remove infected leaves, avoid overhead watering, and apply protective fungicide during humid conditions."
-  },
-  "spider mites two-spotted spider mite": {
-    cause: "Mite infestation worsens in hot, dry conditions and stressed plants.",
-    prevention: "Maintain plant vigor, inspect undersides of leaves, and manage dust and drought stress.",
-    treatment:
-      "Increase humidity where possible, rinse undersides of leaves, and use miticides or insecticidal soap if required."
-  },
-  "target spot": {
-    cause: "Fungal disease promoted by warm temperatures and extended leaf wetness.",
-    prevention: "Provide wider spacing, improve drainage, and reduce splash irrigation.",
-    treatment:
-      "Improve airflow, reduce prolonged moisture, remove diseased debris, and use crop-specific fungicide support."
-  },
-  "tomato yellow leaf curl virus": {
-    cause: "Viral disease spread by whiteflies from infected plants.",
-    prevention: "Use whitefly management, reflective mulch, and resistant varieties.",
-    treatment:
-      "Control whiteflies aggressively, remove infected plants, and use resistant varieties for future cycles."
-  },
-  "tomato mosaic virus": {
-    cause: "Viral infection transmitted by contaminated tools, hands, and plant material.",
-    prevention: "Disinfect tools, avoid handling plants after tobacco exposure, and remove infected plants early.",
-    treatment:
-      "Remove infected plants, disinfect hands and tools, and avoid handling plants after tobacco exposure."
-  },
-  "leaf scorch": {
-    cause: "Heat, moisture stress, nutrient imbalance, or secondary pathogen pressure.",
-    prevention: "Keep irrigation and nutrient supply balanced and avoid severe plant stress.",
-    treatment:
-      "Maintain balanced irrigation and nutrition, remove badly affected leaves, and monitor stress conditions closely."
-  }
-};
-
 const defaultUnhealthyGuidance = {
-  cause: "Likely disease pressure from pathogen exposure, plant stress, or unfavorable field conditions.",
-  prevention: "Use clean planting material, improve airflow, avoid prolonged leaf wetness, and monitor crops regularly.",
-  treatment:
-    "Plant appears diseased. Isolate if necessary, monitor progression, and consult local agronomy guidance for targeted treatment."
+    cause: "Likely disease pressure from pathogen exposure, plant stress, or unfavorable field conditions.",
+    prevention: "Use clean planting material, improve airflow, avoid prolonged leaf wetness, and monitor crops regularly.",
+    treatment: "Plant appears diseased. Isolate if necessary, monitor progression, and consult local agronomy guidance for targeted treatment."
 };
 
 let selectedFile = null;
 
 function setStatus(message, type = "") {
-  statusMessage.textContent = message;
-  statusMessage.className = "status-message";
-  if (type) {
-    statusMessage.classList.add(type);
-  }
+    statusMessage.textContent = message;
+    statusMessage.className = "status-message";
+
+    if (type) {
+        statusMessage.classList.add(type);
+    }
 }
 
 function normalizeText(rawValue) {
-  if (typeof rawValue !== "string") {
-    return "Unknown";
-  }
+    if (typeof rawValue !== "string") {
+        return "Unknown";
+    }
 
-  return rawValue
-    .replace(/_/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .replace(/\b\w/g, (char) => char.toUpperCase());
+    return rawValue
+        .replace(/_/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function normalizeLookupKey(rawValue) {
-  if (typeof rawValue !== "string") {
-    return "";
-  }
+    if (typeof rawValue !== "string") {
+        return "";
+    }
 
-  return rawValue
-    .replace(/_/g, " ")
-    .replace(/[(),]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+    return rawValue
+        .replace(/_/g, " ")
+        .replace(/[(),]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .toLowerCase();
 }
 
 function parsePredictionLabel(rawLabel) {
-  if (typeof rawLabel !== "string" || !rawLabel.trim()) {
+    if (typeof rawLabel !== "string" || !rawLabel.trim()) {
+        return {
+            displayLabel: "Unknown",
+            cause: defaultUnhealthyGuidance.cause,
+            prevention: defaultUnhealthyGuidance.prevention,
+            treatment: defaultUnhealthyGuidance.treatment
+        };
+    }
+
+    const raw = rawLabel.trim();
+
+    const hasClassSeparator = raw.includes("___");
+
+    const [plantRaw, stateRaw] = hasClassSeparator
+        ? raw.split("___")
+        : ["", raw];
+
+    const plantDisplay = plantRaw
+        ? normalizeText(plantRaw)
+        : "Plant";
+
+    const stateDisplay = normalizeText(stateRaw);
+
+    const fullLabelLookup = normalizeLookupKey(raw);
+    const stateLookup = normalizeLookupKey(stateRaw);
+
+    const isHealthy = stateLookup.includes("healthy");
+
+    if (isHealthy) {
+        return {
+            displayLabel: hasClassSeparator
+                ? `${plantDisplay} - Healthy`
+                : stateDisplay,
+
+            cause: `No active disease detected in ${plantDisplay}.`,
+
+            prevention:
+                "Continue routine crop hygiene, balanced nutrition, and periodic scouting to keep plants healthy.",
+
+            treatment:
+                `${plantDisplay} is healthy. Continue regular irrigation, nutrition, and routine monitoring.`
+        };
+    }
+
+    const diseaseInfo =
+        diseaseGuidance[fullLabelLookup] ||
+        diseaseGuidance[stateLookup] ||
+        defaultUnhealthyGuidance;
+
     return {
-      displayLabel: "Unknown",
-      cause: defaultUnhealthyGuidance.cause,
-      prevention: defaultUnhealthyGuidance.prevention,
-      treatment: defaultUnhealthyGuidance.treatment
+        displayLabel: hasClassSeparator
+            ? `${plantDisplay} - ${stateDisplay}`
+            : stateDisplay,
+
+        cause: diseaseInfo.cause,
+        prevention: diseaseInfo.prevention,
+        treatment: diseaseInfo.treatment
     };
-  }
-
-  const raw = rawLabel.trim();
-  const hasClassSeparator = raw.includes("___");
-  const [plantRaw, stateRaw] = hasClassSeparator ? raw.split("___") : ["", raw];
-
-  const plantDisplay = plantRaw ? normalizeText(plantRaw) : "Plant";
-  const stateDisplay = normalizeText(stateRaw);
-  const fullLabelLookup = normalizeLookupKey(raw);
-  const stateLookup = normalizeLookupKey(stateRaw);
-  const isHealthy = stateLookup.includes("healthy");
-
-  if (isHealthy) {
-    return {
-      displayLabel: hasClassSeparator ? `${plantDisplay} - Healthy` : stateDisplay,
-      cause: `No active disease detected in ${plantDisplay}.`,
-      prevention:
-        "Continue routine crop hygiene, balanced nutrition, and periodic scouting to keep plants healthy.",
-      treatment: `${plantDisplay} is healthy. Continue regular irrigation, nutrition, and routine monitoring.`
-    };
-  }
-
-  const diseaseInfo =
-    diseaseGuidance[fullLabelLookup] ||
-    diseaseGuidance[stateLookup] ||
-    defaultUnhealthyGuidance;
-  return {
-    displayLabel: hasClassSeparator ? `${plantDisplay} - ${stateDisplay}` : stateDisplay,
-    cause: diseaseInfo.cause,
-    prevention: diseaseInfo.prevention,
-    treatment: diseaseInfo.treatment
-  };
 }
 
 function updatePreview(file) {
-  if (!file) {
-    previewImage.removeAttribute("src");
-    previewImage.style.display = "none";
-    previewPlaceholder.hidden = false;
-    return;
-  }
+    if (!file) {
+        previewImage.removeAttribute("src");
+        previewImage.style.display = "none";
+        previewPlaceholder.hidden = true;
+        return;
+    }
 
-  const imageUrl = URL.createObjectURL(file);
-  previewImage.src = imageUrl;
-  previewImage.style.display = "block";
-  previewPlaceholder.hidden = true;
+    const imageUrl = URL.createObjectURL(file);
+
+    previewImage.src = imageUrl;
+    previewImage.style.display = "block";
+    previewPlaceholder.hidden = false;
 }
 
 function updateResult(data) {
-  const rawPrediction = data.prediction || data.disease || data.class || "Unknown";
-  const parsedResult = parsePredictionLabel(rawPrediction);
+    const rawPrediction =
+        data.prediction ||
+        data.disease ||
+        data.class ||
+        "Unknown";
 
-  diseaseName.textContent = parsedResult.displayLabel;
-  causeText.textContent = parsedResult.cause;
-  preventionText.textContent = parsedResult.prevention;
-  treatmentText.textContent = parsedResult.treatment;
+    const parsedResult = parsePredictionLabel(rawPrediction);
+
+    diseaseName.textContent = parsedResult.displayLabel;
+    causeText.textContent = parsedResult.cause;
+    preventionText.textContent = parsedResult.prevention;
+    treatmentText.textContent = parsedResult.treatment;
 }
 
 function resetUI() {
-  selectedFile = null;
-  imageInput.value = "";
-  updatePreview(null);
-  setStatus("");
-  diseaseName.textContent = "Awaiting image upload";
-  causeText.textContent =
-    "Upload an image and run a prediction to view probable cause.";
-  preventionText.textContent =
-    "Upload an image and run a prediction to view prevention guidance.";
-  treatmentText.textContent =
-    "Upload an image and run a prediction to receive treatment guidance.";
-  loadingState.hidden = true;
+    selectedFile = null;
+
+    imageInput.value = "";
+
+    updatePreview(null);
+
+    setStatus("");
+
+    diseaseName.textContent = "Awaiting image upload";
+
+    causeText.textContent =
+        "Upload an image and run a prediction to view probable cause.";
+
+    preventionText.textContent =
+        "Upload an image and run a prediction to view prevention guidance.";
+
+    treatmentText.textContent =
+        "Upload an image and run a prediction to receive treatment guidance.";
+
+    loadingState.hidden = true;
 }
 
 function setActiveInsightTab(tabName) {
-  insightTabButtons.forEach((button) => {
-    const isActive = button.dataset.tab === tabName;
-    button.classList.toggle("is-active", isActive);
-    button.setAttribute("aria-selected", String(isActive));
-  });
+    insightTabButtons.forEach((button) => {
+        const isActive = button.dataset.tab === tabName;
 
-  insightPanels.forEach((panel) => {
-    const isActive = panel.id === `panel-${tabName}`;
-    panel.classList.toggle("is-active", isActive);
-    panel.hidden = !isActive;
-  });
+        button.classList.toggle("is-active", isActive);
+        button.setAttribute("aria-selected", String(isActive));
+    });
+
+    insightPanels.forEach((panel) => {
+        const isActive = panel.id === `panel-${tabName}`;
+
+        panel.classList.toggle("is-active", isActive);
+        panel.hidden = !isActive;
+    });
 }
 
 function handleFileSelection(file) {
-  if (!file || !file.type.startsWith("image/")) {
-    setStatus("Please select a valid image file.", "error");
-    return;
-  }
+    if (!file || !file.type.startsWith("image/")) {
+        setStatus("Please select a valid image file.", "error");
+        return;
+    }
 
-  selectedFile = file;
-  updatePreview(file);
-  setStatus(`Selected: ${file.name}`, "success");
+    selectedFile = file;
+
+    updatePreview(file);
+
+    setStatus(`Selected: ${file.name}`, "success");
 }
 
 async function predictDisease() {
-  if (!selectedFile) {
-    setStatus("Please upload an image before predicting.", "error");
-    return;
-  }
-
-  const formData = new FormData();
-  formData.append("image", selectedFile);
-
-  loadingState.hidden = false;
-  predictButton.disabled = true;
-  setStatus("Sending image to detection API...");
-
-  try {
-    const response = await fetch("/predict", {
-      method: "POST",
-      body: formData
-    });
-
-    if (!response.ok) {
-      throw new Error(`Request failed with status ${response.status}`);
+    if (!selectedFile) {
+        setStatus(
+            "Please upload an image before predicting.",
+            "error"
+        );
+        return;
     }
 
-    const result = await response.json();
-    updateResult(result);
-    setStatus("Prediction completed successfully.", "success");
-    document.getElementById("result").scrollIntoView({ behavior: "smooth" });
-  } catch (error) {
-    setStatus(
-      "Prediction failed. Make sure the backend API is running at http://127.0.0.1:5000/predict.",
-      "error"
-    );
-    console.error("Prediction error:", error);
-  } finally {
-    loadingState.hidden = true;
-    predictButton.disabled = false;
-  }
+    const formData = new FormData();
+
+    formData.append("image", selectedFile);
+
+    loadingState.hidden = false;
+    predictButton.disabled = true;
+
+    setStatus("Sending image to detection API...");
+
+    try {
+        const response = await fetch("/predict", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errData = await response
+                .json()
+                .catch(() => ({}));
+
+            throw new Error(
+                errData.error ||
+                `Server responded with status ${response.status}`
+            );
+        }
+
+        const result = await response.json();
+
+        updateResult(result);
+
+        setStatus(
+            "Prediction completed successfully.",
+            "success"
+        );
+
+        document
+            .getElementById("result")
+            .scrollIntoView({
+                behavior: "smooth"
+            });
+
+    } catch (error) {
+        setStatus(
+            `Prediction failed: ${error.message}`,
+            "error"
+        );
+
+        console.error(
+            "Prediction error:",
+            error
+        );
+
+    } finally {
+        loadingState.hidden = true;
+        predictButton.disabled = false;
+    }
 }
 
 ["dragenter", "dragover"].forEach((eventName) => {
-  dropZone.addEventListener(eventName, (event) => {
-    event.preventDefault();
-    dropZone.classList.add("is-dragover");
-  });
+    dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.add("is-dragover");
+    });
 });
 
 ["dragleave", "drop"].forEach((eventName) => {
-  dropZone.addEventListener(eventName, (event) => {
-    event.preventDefault();
-    dropZone.classList.remove("is-dragover");
-  });
+    dropZone.addEventListener(eventName, (event) => {
+        event.preventDefault();
+        dropZone.classList.remove("is-dragover");
+    });
 });
 
 dropZone.addEventListener("drop", (event) => {
-  const file = event.dataTransfer.files[0];
-  handleFileSelection(file);
+    const file = event.dataTransfer.files[0];
+    handleFileSelection(file);
 });
 
 imageInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  handleFileSelection(file);
+    const file = event.target.files[0];
+    handleFileSelection(file);
 });
 
-predictButton.addEventListener("click", predictDisease);
-resetButton.addEventListener("click", resetUI);
-insightTabButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    setActiveInsightTab(button.dataset.tab);
-  });
-});
-
-const revealElements = document.querySelectorAll(".reveal");
-
-const revealObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("is-visible");
-        revealObserver.unobserve(entry.target);
-      }
-    });
-  },
-  {
-    threshold: 0.14
-  }
+predictButton.addEventListener(
+    "click",
+    predictDisease
 );
 
+resetButton.addEventListener(
+    "click",
+    resetUI
+);
+
+insightTabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+        setActiveInsightTab(
+            button.dataset.tab
+        );
+    });
+});
+
+const revealElements =
+    document.querySelectorAll(".reveal");
+
+const revealObserver =
+    new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add(
+                        "is-visible"
+                    );
+
+                    revealObserver.unobserve(
+                        entry.target
+                    );
+                }
+            });
+        },
+        {
+            threshold: 0.14
+        }
+    );
+
 revealElements.forEach((element) => {
-  revealObserver.observe(element);
+    revealObserver.observe(element);
 });
 
 resetUI();
