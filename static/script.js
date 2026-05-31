@@ -134,13 +134,19 @@ const diseaseGuidance = {
     treatment:
       "Remove infected plants or leaves immediately, bag and discard diseased material, and begin approved late blight fungicide applications at once."
   },
-  "tomato leaf mold": {
+    "tomato leaf mold": {
     cause: "Tomato leaf mold develops mainly in high humidity or greenhouse-like conditions with poor airflow.",
+    prevention: "Ventilate growing areas, prune excess growth, and avoid letting humidity stay above disease-friendly levels.",
+    treatment: "Increase ventilation, prune for better air movement, remove infected leaves, and rotate labeled fungicides if leaf mold keeps spreading."
+  }
+}; 
+
 const defaultUnhealthyGuidance = {
     cause: "Likely disease pressure from pathogen exposure, plant stress, or unfavorable field conditions.",
     prevention: "Use clean planting material, improve airflow, avoid prolonged leaf wetness, and monitor crops regularly.",
     treatment: "Plant appears diseased. Isolate if necessary, monitor progression, and consult local agronomy guidance for targeted treatment."
 };
+
 
 
 
