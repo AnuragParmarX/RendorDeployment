@@ -145,236 +145,236 @@ const defaultUnhealthyGuidance = {
 let selectedFile = null;
 
 function setStatus(message, type = "") {
-    statusMessage.textContent = message;
-    statusMessage.className = "status-message";
-
-    if (type) {
-        statusMessage.classList.add(type);
-    }
+  if (!statusMessage) return;
+  statusMessage.textContent = message;
+  statusMessage.className = "status-message";
+  if (type) {
+    statusMessage.classList.add(type);
+  }
 }
 
 function normalizeText(rawValue) {
-    if (typeof rawValue !== "string") {
-        return "Unknown";
-    }
-
-    return rawValue
-        .replace(/_/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .replace(/\b\w/g, (char) => char.toUpperCase());
+  if (typeof rawValue !== "string") return "Unknown";
+  return rawValue
+    .replace(/_/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
 function normalizeLookupKey(rawValue) {
-    if (typeof rawValue !== "string") {
-        return "";
-    }
-
-    return rawValue
-        .replace(/_/g, " ")
-        .replace(/[(),]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .toLowerCase();
+  if (typeof rawValue !== "string") return "";
+  return rawValue
+    .replace(/_/g, " ")
+    .replace(/[(),]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
 }
 
 function parsePredictionLabel(rawLabel) {
-    if (typeof rawLabel !== "string" || !rawLabel.trim()) {
-        return {
-            displayLabel: "Unknown",
-            cause: defaultUnhealthyGuidance.cause,
-            prevention: defaultUnhealthyGuidance.prevention,
-            treatment: defaultUnhealthyGuidance.treatment
-        };
-    }
-
-    const raw = rawLabel.trim();
-    const hasClassSeparator = raw.includes("___");
-    const [plantRaw, stateRaw] = hasClassSeparator ? raw.split("___") : ["", raw];
-
-    const plantDisplay = plantRaw ? normalizeText(plantRaw) : "Plant";
-    const stateDisplay = normalizeText(stateRaw);
-
-    const fullLabelLookup = normalizeLookupKey(raw);
-    const stateLookup = normalizeLookupKey(stateRaw);
-    const isHealthy = stateLookup.includes("healthy");
-
-    if (isHealthy) {
-        return {
-            displayLabel: hasClassSeparator ? `${plantDisplay} - Healthy` : stateDisplay,
-            cause: `No active disease detected in ${plantDisplay}.`,
-            prevention: "Continue routine crop hygiene, balanced nutrition, and periodic scouting to keep plants healthy.",
-            treatment: `${plantDisplay} is healthy. Continue regular irrigation, nutrition, and routine monitoring.`
-        };
-    }
-
-    const diseaseInfo = diseaseGuidance[fullLabelLookup] || diseaseGuidance[stateLookup] || defaultUnhealthyGuidance;
-
+  if (typeof rawLabel !== "string" || !rawLabel.trim()) {
     return {
-        displayLabel: hasClassSeparator ? `${plantDisplay} - ${stateDisplay}` : stateDisplay,
-        cause: diseaseInfo.cause,
-        prevention: diseaseInfo.prevention,
-        treatment: diseaseInfo.treatment
+      displayLabel: "Unknown",
+      cause: defaultUnhealthyGuidance.cause,
+      prevention: defaultUnhealthyGuidance.prevention,
+      treatment: defaultUnhealthyGuidance.treatment
     };
+  }
+
+  const raw = rawLabel.trim();
+  const hasClassSeparator = raw.includes("___");
+  const [plantRaw, stateRaw] = hasClassSeparator ? raw.split("___") : ["", raw];
+
+  const plantDisplay = plantRaw ? normalizeText(plantRaw) : "Plant";
+  const stateDisplay = normalizeText(stateRaw);
+
+  const fullLabelLookup = normalizeLookupKey(raw);
+  const stateLookup = normalizeLookupKey(stateRaw);
+  const isHealthy = stateLookup.includes("healthy");
+
+  if (isHealthy) {
+    return {
+      displayLabel: hasClassSeparator ? `${plantDisplay} - Healthy` : stateDisplay,
+      cause: `No active disease detected in ${plantDisplay}.`,
+      prevention: "Continue routine crop hygiene, balanced nutrition, and periodic scouting to keep plants healthy.",
+      treatment: `${plantDisplay} is healthy. Continue regular irrigation, nutrition, and routine monitoring.`
+    };
+  }
+
+  const diseaseInfo = diseaseGuidance[fullLabelLookup] || diseaseGuidance[stateLookup] || defaultUnhealthyGuidance;
+
+  return {
+    displayLabel: hasClassSeparator ? `${plantDisplay} - ${stateDisplay}` : stateDisplay,
+    cause: diseaseInfo.cause,
+    prevention: diseaseInfo.prevention,
+    treatment: diseaseInfo.treatment
+  };
 }
 
-// FIXED: Flipped the hidden property logic so it shows/hides properly
 function updatePreview(file) {
-    if (!file) {
-        previewImage.removeAttribute("src");
-        previewImage.style.display = "none";
-        previewPlaceholder.hidden = false; // Show the placeholder box when empty
-        return;
-    }
+  if (!previewImage || !previewPlaceholder) return;
+  
+  if (!file) {
+    previewImage.removeAttribute("src");
+    previewImage.style.display = "none";
+    previewPlaceholder.style.display = "flex"; // Restores placeholder container visibility on reset
+    return;
+  }
 
-    const imageUrl = URL.createObjectURL(file);
-    previewImage.src = imageUrl;
-    previewImage.style.display = "block";
-    previewPlaceholder.hidden = true; // Hide the placeholder text when image exists
+  const imageUrl = URL.createObjectURL(file);
+  previewImage.src = imageUrl;
+  previewImage.style.display = "block";
+  previewPlaceholder.style.display = "none"; // Hides placeholder elements cleanly upon upload
 }
 
 function updateResult(data) {
-    const rawPrediction = data.prediction || data.disease || data.class || "Unknown";
-    const parsedResult = parsePredictionLabel(rawPrediction);
+  const rawPrediction = data.prediction || data.disease || data.class || "Unknown";
+  const parsedResult = parsePredictionLabel(rawPrediction);
 
-    diseaseName.textContent = parsedResult.displayLabel;
-    causeText.textContent = parsedResult.cause;
-    preventionText.textContent = parsedResult.prevention;
-    treatmentText.textContent = parsedResult.treatment;
+  if (diseaseName) diseaseName.textContent = parsedResult.displayLabel;
+  if (causeText) causeText.textContent = parsedResult.cause;
+  if (preventionText) preventionText.textContent = parsedResult.prevention;
+  if (treatmentText) treatmentText.textContent = parsedResult.treatment;
 }
 
 function resetUI() {
-    selectedFile = null;
-    imageInput.value = "";
-    updatePreview(null);
-    setStatus("");
+  selectedFile = null;
+  if (imageInput) imageInput.value = "";
+  updatePreview(null);
+  setStatus("");
 
-    diseaseName.textContent = "Awaiting image upload";
-    causeText.textContent = "Upload an image and run a prediction to view probable cause.";
-    preventionText.textContent = "Upload an image and run a prediction to view prevention guidance.";
-    treatmentText.textContent = "Upload an image and run a prediction to receive treatment guidance.";
-    loadingState.hidden = true;
+  if (diseaseName) diseaseName.textContent = "Awaiting image upload";
+  if (causeText) causeText.textContent = "Upload an image and run a prediction to view probable cause.";
+  if (preventionText) preventionText.textContent = "Upload an image and run a prediction to view prevention guidance.";
+  if (treatmentText) treatmentText.textContent = "Upload an image and run a prediction to receive treatment guidance.";
+  if (loadingState) loadingState.hidden = true;
 }
 
 function setActiveInsightTab(tabName) {
-    insightTabButtons.forEach((button) => {
-        const isActive = button.dataset.tab === tabName;
-        button.classList.toggle("is-active", isActive);
-        button.setAttribute("aria-selected", String(isActive));
-    });
+  insightTabButtons.forEach((button) => {
+    const isActive = button.dataset.tab === tabName;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-selected", String(isActive));
+  });
 
-    insightPanels.forEach((panel) => {
-        const isActive = panel.id === `panel-${tabName}`;
-        panel.classList.toggle("is-active", isActive);
-        panel.hidden = !isActive;
-    });
+  insightPanels.forEach((panel) => {
+    const isActive = panel.id === `panel-${tabName}`;
+    panel.classList.toggle("is-active", isActive);
+    panel.hidden = !isActive;
+  });
 }
 
 function handleFileSelection(file) {
-    if (!file || !file.type.startsWith("image/")) {
-        setStatus("Please select a valid image file.", "error");
-        return;
-    }
+  if (!file || !file.type || !file.type.startsWith("image/")) {
+    setStatus("Please select a valid image file.", "error");
+    return;
+  }
 
-    selectedFile = file;
-    updatePreview(file);
-    setStatus(`Selected: ${file.name}`, "success");
+  selectedFile = file;
+  updatePreview(file);
+  setStatus(`Selected: ${file.name}`, "success");
 }
 
 async function predictDisease() {
-    if (!selectedFile) {
-        setStatus("Please upload an image before predicting.", "error");
-        return;
+  if (!selectedFile) {
+    setStatus("Please upload an image before predicting.", "error");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("image", selectedFile);
+
+  if (loadingState) loadingState.hidden = false;
+  if (predictButton) predictButton.disabled = true;
+  setStatus("Sending image to detection API...");
+
+  try {
+    const response = await fetch("/predict", {
+      method: "POST",
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errData = await response.json().catch(() => ({}));
+      throw new Error(errData.error || `Server responded with status ${response.status}`);
     }
 
-    const formData = new FormData();
-    formData.append("image", selectedFile);
+    const result = await response.json();
+    updateResult(result);
+    setStatus("Prediction completed successfully.", "success");
 
-    loadingState.hidden = false;
-    predictButton.disabled = true;
-    setStatus("Sending image to detection API...");
-
-    try {
-        const response = await fetch("/predict", {
-            method: "POST",
-            body: formData
-        });
-
-        if (!response.ok) {
-            const errData = await response.json().catch(() => ({}));
-            throw new Error(errData.error || `Server responded with status ${response.status}`);
-        }
-
-        const result = await response.json();
-        updateResult(result);
-        setStatus("Prediction completed successfully.", "success");
-        
-        // Dynamic scroll to results section
-        const resultSection = document.getElementById("result");
-        if (resultSection) {
-            resultSection.scrollIntoView({ behavior: "smooth" });
-        }
-    } catch (error) {
-        setStatus(`Prediction failed: ${error.message}`, "error");
-        console.error("Prediction error:", error);
-    } finally {
-        loadingState.hidden = true;
-        predictButton.disabled = false;
+    const resultSection = document.getElementById("result");
+    if (resultSection) {
+      resultSection.scrollIntoView({ behavior: "smooth" });
     }
+  } catch (error) {
+    setStatus(`Prediction failed: ${error.message}`, "error");
+    console.error("Prediction error:", error);
+  } finally {
+    if (loadingState) loadingState.hidden = true;
+    if (predictButton) predictButton.disabled = false;
+  }
 }
 
-// Drag and drop event wiring
-["dragenter", "dragover"].forEach((eventName) => {
+// Attach event listeners safely
+if (dropZone) {
+  ["dragenter", "dragover"].forEach((eventName) => {
     dropZone.addEventListener(eventName, (event) => {
-        event.preventDefault();
-        dropZone.classList.add("is-dragover");
+      event.preventDefault();
+      dropZone.classList.add("is-dragover");
     });
-});
+  });
 
-["dragleave", "drop"].forEach((eventName) => {
+  ["dragleave", "drop"].forEach((eventName) => {
     dropZone.addEventListener(eventName, (event) => {
-        event.preventDefault();
-        dropZone.classList.remove("is-dragover");
+      event.preventDefault();
+      dropZone.classList.remove("is-dragover");
     });
-});
+  });
 
-dropZone.addEventListener("drop", (event) => {
-    const file = event.dataTransfer.files[0];
-    handleFileSelection(file);
-});
+  dropZone.addEventListener("drop", (event) => {
+    event.preventDefault();
+    if (event.dataTransfer && event.dataTransfer.files.length > 0) {
+      handleFileSelection(event.dataTransfer.files[0]);
+    }
+  });
+}
 
-imageInput.addEventListener("change", (event) => {
-    const file = event.target.files[0];
-    handleFileSelection(file);
-});
+if (imageInput) {
+  imageInput.addEventListener("change", (event) => {
+    if (event.target && event.target.files.length > 0) {
+      handleFileSelection(event.target.files[0]);
+    }
+  });
+}
 
-predictButton.addEventListener("click", predictDisease);
-resetButton.addEventListener("click", resetUI);
+if (predictButton) predictButton.addEventListener("click", predictDisease);
+if (resetButton) resetButton.addEventListener("click", resetUI);
 
 insightTabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-        setActiveInsightTab(button.dataset.tab);
-    });
+  button.addEventListener("click", () => {
+    setActiveInsightTab(button.dataset.tab);
+  });
 });
 
-// Scroll animations handler
 const revealElements = document.querySelectorAll(".reveal");
 const revealObserver = new IntersectionObserver(
-    (entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("is-visible");
-                revealObserver.unobserve(entry.target);
-            }
-        });
-    },
-    { threshold: 0.14 }
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  },
+  { threshold: 0.14 }
 );
 
 revealElements.forEach((element) => {
-    revealObserver.observe(element);
+  revealObserver.observe(element);
 });
 
-// Run layout initialization
+// Run layout initialization safely
 resetUI();
 setActiveInsightTab("cause");
