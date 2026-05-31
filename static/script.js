@@ -142,6 +142,8 @@ const defaultUnhealthyGuidance = {
     treatment: "Plant appears diseased. Isolate if necessary, monitor progression, and consult local agronomy guidance for targeted treatment."
 };
 
+
+
 let selectedFile = null;
 
 function setStatus(message, type = "") {
@@ -218,14 +220,14 @@ function updatePreview(file) {
   if (!file) {
     previewImage.removeAttribute("src");
     previewImage.style.display = "none";
-    previewPlaceholder.style.display = "flex"; // Restores placeholder container visibility on reset
+    previewPlaceholder.style.display = "flex"; // Restores visibility on reset
     return;
   }
 
   const imageUrl = URL.createObjectURL(file);
   previewImage.src = imageUrl;
   previewImage.style.display = "block";
-  previewPlaceholder.style.display = "none"; // Hides placeholder elements cleanly upon upload
+  previewPlaceholder.style.display = "none"; // Hides text cleanly upon upload
 }
 
 function updateResult(data) {
@@ -266,6 +268,7 @@ function setActiveInsightTab(tabName) {
 }
 
 function handleFileSelection(file) {
+  // FIXED: Now safely reads file properties because we explicitly pass the first file index below
   if (!file || !file.type || !file.type.startsWith("image/")) {
     setStatus("Please select a valid image file.", "error");
     return;
@@ -335,6 +338,7 @@ if (dropZone) {
 
   dropZone.addEventListener("drop", (event) => {
     event.preventDefault();
+    // FIXED: Added [0] index to pull the raw file out of the dataTransfer array collection
     if (event.dataTransfer && event.dataTransfer.files.length > 0) {
       handleFileSelection(event.dataTransfer.files[0]);
     }
@@ -343,6 +347,7 @@ if (dropZone) {
 
 if (imageInput) {
   imageInput.addEventListener("change", (event) => {
+    // FIXED: Added [0] index to pull the raw file out of the target files array collection
     if (event.target && event.target.files.length > 0) {
       handleFileSelection(event.target.files[0]);
     }
